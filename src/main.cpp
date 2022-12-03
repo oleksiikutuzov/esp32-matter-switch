@@ -1,13 +1,3 @@
-// clang-format off
-#include <Arduino.h>
-#include "Matter.h"
-#include <app/server/OnboardingCodesUtil.h>
-using namespace chip;
-using namespace chip::app::Clusters;
-using namespace esp_matter;
-using namespace esp_matter::endpoint;
-// clang-format on
-
 /**
  * This program presents example Matter plugin unit (switch) device with two
  * endpoints with OnOff clusters by controlling LEDs with Matter and toggle
@@ -18,8 +8,18 @@ using namespace esp_matter::endpoint;
  *  - toggle button (with debouncing)
  */
 
+// clang-format off
+#include <Arduino.h>
+#include "Matter.h"
+#include <app/server/OnboardingCodesUtil.h>
+using namespace chip;
+using namespace chip::app::Clusters;
+using namespace esp_matter;
+using namespace esp_matter::endpoint;
+// clang-format on
+
 // Please configure your PINs
-const int LED_PIN = 32;
+const int SWITCH_PIN = 18;
 const int TOGGLE_BUTTON_PIN = 0;
 
 // Debounce for toggle button
@@ -56,18 +56,18 @@ static esp_err_t on_attribute_update(attribute::callback_type_t type,
       cluster_id == CLUSTER_ID && attribute_id == ATTRIBUTE_ID) {
     // We got an plugin unit on/off attribute update!
     boolean new_state = val->val.b;
-    digitalWrite(LED_PIN, new_state);
+    digitalWrite(SWITCH_PIN, new_state);
   }
   return ESP_OK;
 }
 
 void setup() {
   Serial.begin(115200);
-  pinMode(LED_PIN, OUTPUT);
+  pinMode(SWITCH_PIN, OUTPUT);
   pinMode(TOGGLE_BUTTON_PIN, INPUT);
 
   // Enable debug logging
-  esp_log_level_set("*", ESP_LOG_DEBUG);
+  // esp_log_level_set("*", ESP_LOG_DEBUG);
 
   // Setup Matter node
   node::config_t node_config;
